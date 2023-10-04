@@ -15,7 +15,7 @@ int gemelos(int a, int b);
 bool es_primo(int numero, int divisor);
 
 //prototipos de funcion primos malvados
-
+char convertir(int numero, char &binario, int &size);
 
 
 
@@ -61,24 +61,29 @@ int main() {
                     cout<<endl<<endl<<"------ presione cualquier numero distinto de 1 para salir o 1 para repetir: ";
                     cin>>opc;
                 }
-                goto inicio;
+                goto inicio; //el break me sacaba del programa xd
             case 2:
-                while(opc == 1){
+                while(opc == 2){
                     clear();
-                    
-                    
 
-                    cout<<endl<<endl<<"------ presione cualquier numero distinto de 1 para salir o 1 para repetir: ";
+                    leer(numero0, numero1);
+                    convertir(numero0, binarios[0], size = 0);
+                    
+                    for(int i = 0; i < size; i++){
+                        cout<<binarios[i];
+                    }
+
+                    cout<<endl<<endl<<"------ presione cualquier numero distinto de 2 para salir o 2 para repetir: ";
                     cin>>opc;
                 }
-                break;
+                goto inicio;
         }
 
         return 0;
     }
 }
 
-//funciones
+//funciones gemelos
 int leer(int &numero0, int &numero1){
     label1: //goto es literalmente ir a, cuando decimos goto label1; regresamos aca, si usamos break eb vez de goto sale error en el compilador.
     clear();
@@ -104,7 +109,7 @@ int gemelos(int a, int b){
 
 bool es_primo(int numero, int divisor = 2){
 	if (divisor * divisor > numero) {
-        return true; // Si no se encontraron divisores hasta la raíz cuadrada, es primo
+        return true; // Si el cuadrado del divisor es mayor al numero, es primo
     }
     if (numero % divisor == 0) {
         return false; // Si es divisible por el divisor actual, no es primo
@@ -113,8 +118,78 @@ bool es_primo(int numero, int divisor = 2){
 	return es_primo(numero, divisor+1);
 }
 
+//funciones malvadas
+
+char convertir(int numero, char &binario, int &size){
+    char *p;
+    p = &binario;
+    if(numero > 0){
+      if(numero % 2 == 0){
+           *p = '0';
+       }
+        else if(numero % 2 == 1){ 
+            *p = '1';
+        }
+    size++;
+    p++;
+    return convertir(numero/ 2, *p, size);
+    }
+    return 0;
+}
+
+
+unsigned int decimalToBinary(unsigned decimal, unsigned int binaryResult) {
+    if (decimal > 0) {
+        binaryResult = binaryResult * 10 + decimal % 2; // Acumula el dígito binario en la variable entera
+        cout<<binaryResult<<endl;
+        return decimalToBinary(decimal / 2, binaryResult); // Llama recursivamente con la parte entera de la división por 2
+    }
+    cout<<binaryResult<<endl;
+    return binaryResult;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //metodos
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //hay que agilizar tiempo y hay gente que usa linux || platform tolerant is thhe way
@@ -125,73 +200,6 @@ void clear(){
         system("clear"); 
     #endif
 }
-//funciones de luis
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
