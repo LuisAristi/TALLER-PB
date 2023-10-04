@@ -16,6 +16,8 @@ bool es_primo(int numero, int divisor);
 
 //prototipos de funcion primos malvados
 char convertir(int numero, char &binario, int &size);
+int ordenar(char &binario, int size);
+int elevar(int indice, int exponente);
 
 
 
@@ -68,10 +70,9 @@ int main() {
 
                     leer(numero0, numero1);
                     convertir(numero0, binarios[0], size = 0);
+
+                    cout<<ordenar(binarios[0], size);
                     
-                    for(int i = 0; i < size; i++){
-                        cout<<binarios[i];
-                    }
 
                     cout<<endl<<endl<<"------ presione cualquier numero distinto de 2 para salir o 2 para repetir: ";
                     cin>>opc;
@@ -137,6 +138,25 @@ char convertir(int numero, char &binario, int &size){
     return 0;
 }
 
+int ordenar(char &binario, int size){
+    char *p;
+    int numero = 0;
+    p = &binario;
+    for(int i = 0; i < size + 1; i++){
+        if(*(p+i) == '1'){
+            numero += elevar(2, i);
+        }
+    }
+    return numero;
+}
+
+int elevar(int indice, int exponente){
+    exponente--;
+    if(exponente > 0){
+        return elevar(indice * indice, exponente - 1);
+    }
+    else return indice;
+}
 
 unsigned int decimalToBinary(unsigned decimal, unsigned int binaryResult) {
     if (decimal > 0) {
