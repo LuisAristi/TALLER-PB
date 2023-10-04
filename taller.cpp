@@ -196,7 +196,7 @@ void clear(){
 
 
 
-//aqui terminan funciones de luis
+//aqui terminan funciones de luis, 199
 //coloca desde la linea 200 tus funciones, este texto debe estar en la linea 200
 //comienzan las de moncrieff
 
