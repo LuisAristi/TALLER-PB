@@ -1,3 +1,6 @@
+/*for(int i = 0; i < n; i++){
+    cout<<codigo[i]<<", "<<sueldo_hora[i]<<", "<<horas_trabajadas[i]<<endl;
+  }*/
 #ifdef _WIN32 
         #include<windows.h> 
     #else
@@ -5,6 +8,7 @@
     #endif
 
 #include<iostream>
+#include<stdio.h>
 #include<math.h>
 
 using namespace std;
@@ -16,23 +20,14 @@ bool es_primo(int numero, int divisor);
 
 //prototipos de funcion primos malvados
 char convertir(int numero, char &binario, int &size);
-int ordenar(char &binario, int size);
-int elevar(int indice, int exponente);
+int malvada(char &binario, int size);
 
+//prototipos de punteros
+void ingresar_datos_chofer(int &codigo, int &sueldo_hora, int &horas_trabajadas, int n);
+void nomina(int &codigo, int &sueldo_hora, int &horas_trabajadas, int &sueldo_semanal, int n);
+void consulta(int* codigo, int* sueldo_hora, int* horas_trabajadas, int* sueldo_semanal, int n);
 
-
-
-//coloca desde la linea 23 a 32 tus prototipos de funcion, este texto debe estar en la linea 23
-
-
-
-
-
-
-
-
-//terminan aca, este texto debe estar en la linea 32
-
+//generales
 void clear();
 
 int main() {
@@ -64,20 +59,71 @@ int main() {
                     cin>>opc;
                 }
                 goto inicio; //el break me sacaba del programa xd
+
             case 2:
                 while(opc == 2){
                     clear();
 
-                    leer(numero0, numero1);
-                    convertir(numero0, binarios[0], size = 0);
+                    label1: //goto es literalmente ir a, cuando decimos goto label1; regresamos aca, si usamos break en vez de goto sale error en el compilador.
+                    cout<<"ingrese el primer numero: "; cin>>numero0;
+                    if(numero0 <= 1 || es_primo(numero0, 2) == false ){ 
+                        cout<<"recuerde ingresar un numero primo"<<endl; sleep(1); goto label1; //el goto es muchisimo mejor que implementar ciclos
+                    }
 
-                    cout<<ordenar(binarios[0], size);
+                    convertir(numero0, binarios[0], size = 0); //como dato curioso el binario se lee al reves, esto tiene que ver con el orden de la funcion recursiva
+                    if(malvada(binarios[0], size) % 2 == 0){   //(no importa) lo importante poder contar cuantos 1 hay y por consiguiente saber si el numero es malvado
+                        cout<<"es un numero malvado !!!"<<endl;
+                    }
+                    else cout<<"no es un numero malvado :()"<<endl;
                     
-
-                    cout<<endl<<endl<<"------ presione cualquier numero distinto de 2 para salir o 2 para repetir: ";
-                    cin>>opc;
+                    cout<<endl<<endl<<"------ presione cualquier numero distinto de 2 para salir o 2 para repetir: "; //no se me ocurre otro metodo mejor (los hay)
+                    cin>>opc; 
                 }
                 goto inicio;
+
+            case 3: 
+                //variables locales pa no tener que subir a mirar pa arriba
+                int n;
+                cout<<"ingrese la cantidad de choferes: "; cin>>n;
+
+                int codigo[n], sueldo_hora[n], horas_trabajadas[n], sueldo_semanal[n];
+
+                while(true){
+                    clear();
+                    int opc1;
+                    menu3:
+                    cout<<"TRANSPORTES RAPIDOS Y FURIOSOS"<<endl;
+                    cout<<"1. ingresar datos del chofer: "<<endl; //codigo, sueldo por horas, horas trabajadas a la semana -> leer horas por dia; L M M J V S D (7);
+                    cout<<"2. Generar nómina choferes: "<<endl;
+                    cout<<"3. Consultar un chofer: "<<endl;
+                    cout<<"4. reporte: "<<endl;
+                    cout<<"5. salir: "<<endl;
+                    cin>>opc1;
+
+                    switch(opc1){
+                        case 1:
+                            ingresar_datos_chofer(codigo[0], sueldo_hora[0], horas_trabajadas[0], n); //como trabajamos con punteros podemos acceder a esos datos :)
+                            sleep(2);
+                            goto menu3;
+                        case 2:
+                            nomina(codigo[0], sueldo_hora[0], horas_trabajadas[0], sueldo_semanal[0], n);
+                            goto menu3;
+                        case 3:
+                            consulta(codigo, sueldo_hora, horas_trabajadas, sueldo_semanal, n);
+                            sleep(2);
+                            goto menu3;
+                        case 4:
+                            cout<<"we'll be right back";
+                            sleep(2);
+                            goto menu3;
+                        case 5:
+                            goto inicio;
+                        default:
+                            cout<<"ingrese una opcion valida";
+                            sleep(2);
+                            break;
+                    }
+                }
         }
 
         return 0;
@@ -89,13 +135,11 @@ int leer(int &numero0, int &numero1){
     label1: //goto es literalmente ir a, cuando decimos goto label1; regresamos aca, si usamos break eb vez de goto sale error en el compilador.
     clear();
     cout<<"ingrese el primer numero: "; cin>>numero0;
-
     if(numero0 <= 1 || es_primo(numero0, 2) == false ){ 
         cout<<"recuerde ingresar un numero primo"<<endl; sleep(1); goto label1;
     }
 
     cout<<endl<<"ingrese el segundo numero: "; cin>>numero1;
-
     if(numero1 <= 1 || es_primo(numero1, 2) == false ){ 
         cout<<"recuerde ingresar un numero primo"<<endl; sleep(1); goto label1;
     }
@@ -119,8 +163,8 @@ bool es_primo(int numero, int divisor = 2){
 	return es_primo(numero, divisor+1);
 }
 
-//funciones malvadas
 
+//funciones malvadas
 char convertir(int numero, char &binario, int &size){
     char *p;
     p = &binario;
@@ -138,81 +182,84 @@ char convertir(int numero, char &binario, int &size){
     return 0;
 }
 
-int ordenar(char &binario, int size){
-    char *p;
+int malvada(char &binario, int size){
     int numero = 0;
+    char *p;
     p = &binario;
-    for(int i = 0; i < size + 1; i++){
-        if(*(p+i) == '1'){
-            numero += elevar(2, i);
+    for(int i = 0; i < size; i++){
+        if(*p == '1'){
+            numero++;
         }
+        p++;
     }
     return numero;
 }
 
-int elevar(int indice, int exponente){
-    exponente--;
-    if(exponente > 0){
-        return elevar(indice * indice, exponente - 1);
+//funciones punteros
+void ingresar_datos_chofer(int &codigo, int &sueldo_hora, int &horas_trabajadas, int n){ //n = cantidad de choferes
+    int *p, *q, *r, numero = 0, numero1 = 0;
+    p = &codigo;
+    q = &sueldo_hora;
+    r = &horas_trabajadas;
+
+    for (int i = 0; i < n; ++i) {
+        cout << "ingrese los datos para el chofer " << (i + 1) << ":" << endl;
+        cout << "Código del chofer: ";
+        cin >>*p;
+
+        cout << "Sueldo por hora del chofer: ";
+        cin >>*q;
+
+        for (int dia = 0; dia < 7; ++dia) {
+            cout << "Ingrese las horas trabajadas del día " << (dia + 1) << ": ";
+            cin >>numero;
+            numero1 += numero;
+        }
+        *r = numero1;
+        p++; q++; r++; numero = 0; numero1 = 0;
     }
-    else return indice;
 }
 
-unsigned int decimalToBinary(unsigned decimal, unsigned int binaryResult) {
-    if (decimal > 0) {
-        binaryResult = binaryResult * 10 + decimal % 2; // Acumula el dígito binario en la variable entera
-        cout<<binaryResult<<endl;
-        return decimalToBinary(decimal / 2, binaryResult); // Llama recursivamente con la parte entera de la división por 2
+void nomina(int &codigo, int &sueldo_hora, int &horas_trabajadas, int &sueldo_semanal, int n){ 
+    int *p, *q, *r, *s;
+    p = &codigo;
+    q = &sueldo_hora;
+    r = &horas_trabajadas;
+    s = &sueldo_semanal;
+
+    for (int i = 0; i < n; ++i) {
+        cout<<"chofer #"<<*p<<":"<<endl;
+        cout<<"horas trabajadas: "<<*r;
+        cout<<"      sueldo semanal: "<<*r * *q<<endl<<endl;
+        *s = *r * *q;
+        p++; q++; r++; s++;
     }
-    cout<<binaryResult<<endl;
-    return binaryResult;
 }
 
+void consulta(int* codigo, int* sueldo_hora, int* horas_trabajadas, int* sueldo_semanal, int n) {
+    int consulta;
+    cout<<"ingrese el codigo a consultar: ";
+    cin>>consulta;
+    
+    bool codigo_encontrado = false; //  para saber si se encontró el código
+    
+    for (int i = 0; i < n; ++i) {
+        if (codigo[i] == consulta) {
+            codigo_encontrado = true;
+            cout << "Código encontrado en la base de datos:" << endl;
+            cout << "Horas trabajadas: " << horas_trabajadas[i] << " horas" << endl;
+            cout << "Sueldo por hora: " << sueldo_hora[i] << " unidades monetarias por hora" << endl;
+            cout << "Sueldo semanal: " << sueldo_semanal[i] << " unidades monetarias" << endl;
+            break; // Salir del bucle ya que se encontró el código
+        }
+    }
 
+    if (!codigo_encontrado) {
+        cout << "El código no fue encontrado en la base de datos" << endl;
+    }
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//metodos
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//hay que agilizar tiempo y hay gente que usa linux || platform tolerant is thhe way
+//hay que agilizar tiempo y hay que tener la posibilidad de linux cubierta || platform tolerant is the way
 void clear(){
     #ifdef _WIN32 
         system("cls"); 
@@ -220,89 +267,3 @@ void clear(){
         system("clear"); 
     #endif
 }
-
-
-
-
-//aqui terminan funciones de luis, 199
-//coloca desde la linea 200 tus funciones, este texto debe estar en la linea 200
-//comienzan las de moncrieff
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//coloca desde la linea 160 tus funciones, este texto debe estar en la linea 280
