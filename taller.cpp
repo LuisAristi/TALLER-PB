@@ -1,6 +1,3 @@
-/*for(int i = 0; i < n; i++){
-    cout<<codigo[i]<<", "<<sueldo_hora[i]<<", "<<horas_trabajadas[i]<<endl;
-  }*/
 #ifdef _WIN32
 #include <windows.h>
 #else
